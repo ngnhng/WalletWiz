@@ -1,9 +1,3 @@
-function isClient (): boolean {
-	return typeof window !== "undefined";
+export function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
-function isServer (): boolean {
-	return !isClient();
-}
-
-export default { isClient, isServer }
