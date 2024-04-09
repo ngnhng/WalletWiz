@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "WalletWiz",
-    "slug": "WalletWiz",
+    "slug": "walletwiz",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "756e67df-1562-4452-be7f-e9cdf1306bfb"
+      }
+    },
+    "owner": "nguyendhst"
   }
 }
