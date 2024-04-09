@@ -12,6 +12,17 @@ ADD CONSTRAINT users_email_unique UNIQUE (email),
 ADD CONSTRAINT users_email_not_null CHECK (email IS NOT NULL);
 ADD CONSTRAINT users_email_length CHECK (LENGTH(email) <= 80);
 
+CREATE TABLE budgets (
+    id BIGSERIAL,
+    user_id BIGINT,
+    month DATE ,
+    amount DECIMAL(10, 2),
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+ALTER TABLE budgets
+ADD CONSTRAINT budgets_amount_not_null CHECK (amount IS NOT NULL);
 
 CREATE TABLE categories (
     id BIGSERIAL,
@@ -25,7 +36,7 @@ ADD CONSTRAINT categories_name_length CHECK (LENGTH(name) <= 100);
 
 CREATE TABLE expenses (
     id BIGSERIAL,
-	iid BIGINT, -- external id shared with the client
+    iid BIGINT, -- external id shared with the client
     user_id INTEGER,
     category_id INTEGER,
     amount DECIMAL(10, 2),
