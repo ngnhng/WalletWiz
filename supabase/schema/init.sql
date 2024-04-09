@@ -9,7 +9,7 @@ ALTER TABLE users
 ADD CONSTRAINT users_name_not_null CHECK (name IS NOT NULL),
 ADD CONSTRAINT users_name_length CHECK (LENGTH(name) <= 50),
 ADD CONSTRAINT users_email_unique UNIQUE (email),
-ADD CONSTRAINT users_email_not_null CHECK (email IS NOT NULL);
+ADD CONSTRAINT users_email_not_null CHECK (email IS NOT NULL),
 ADD CONSTRAINT users_email_length CHECK (LENGTH(email) <= 80);
 
 CREATE TABLE budgets (
@@ -31,7 +31,7 @@ CREATE TABLE categories (
 );
 
 ALTER TABLE categories
-ADD CONSTRAINT categories_name_not_null CHECK (name IS NOT NULL);
+ADD CONSTRAINT categories_name_not_null CHECK (name IS NOT NULL),
 ADD CONSTRAINT categories_name_length CHECK (LENGTH(name) <= 100);
 
 CREATE TABLE expenses (
