@@ -1,4 +1,9 @@
 {
-	"compilerOptions": {},
+	"compilerOptions": {
+		"jsx": "react"
+	},
+	"include": [
+		"src/lib/svg.d.ts"
+	],
 	"extends": "expo/tsconfig.base"
 }
