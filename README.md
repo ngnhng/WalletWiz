@@ -10,12 +10,20 @@
 	- [Biomejs](https://biomejs.com) is used for linting
 	- Using VSCode? Install the Biomejs extension for better linting experience
 
+
+## Common commands
+
+1. `yarn android` - Start the app on Android
+2. `yarn eas build` - Build the app for production
+3. `yarn eas update --channel preview` - Update the app for preview
+
 ## Architecture
 
 ### Tech Stack
 - React Native: Frontend
 - TypeScript: Language
 - Expo: Development Environment
+- Expo Router: Navigation
 - Biomejs: Linting
 - Supabase: Database
 - Supabase Edge Functions: Serverless Functions
