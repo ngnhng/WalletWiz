@@ -12,14 +12,17 @@ export default function Page() {
                 <View style={styles.textContainer}>
                     <Text style={styles.text}>Scan directly</Text>
                     <Text style={styles.smallText}>
-                        Lazy to input the data yourself?
-                        <br />
+                        Lazy to input the data yourself?{"\n"}
                         No worries! Just give the app a scan.
                     </Text>
                 </View>
             </View>
             <View style={styles.navContainer}>
-                <Link replace href="/onboarding/secure" style={styles.buttonLink}>
+                <Link
+                    replace
+                    href="/onboarding/secure"
+                    style={styles.buttonLink}
+                >
                     Next
                 </Link>
                 <Link replace href="/home" style={styles.backLink}>

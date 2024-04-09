@@ -1,23 +1,20 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Link } from "expo-router";
+import { StyleSheet } from "react-native";
+import { Redirect } from "expo-router";
 
 export default function Page() {
-    return (
-        <View style={styles.container}>
-            <Link replace href="/onboarding/welcome">To Welcome</Link>
-            <StatusBar style="auto" />
-        </View>
-    );
+    return <Redirect href="/onboarding/welcome" />;
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#111318",
-        color: "white",
         alignItems: "center",
         justifyContent: "center",
+    },
+    text: {
+        color: "#FFFFFF",
+        fontSize: 20,
     },
 });
