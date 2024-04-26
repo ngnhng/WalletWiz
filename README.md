@@ -1,7 +1,7 @@
 # WalletWiz
 <img align="right" width="159px" src="./logo.png">
 
-## Setup
+## Mobile App Development Setup
 1. Clone the repository
 2. Run `yarn` to install dependencies
 3. Start development
@@ -10,8 +10,12 @@
 	- [Biomejs](https://biomejs.com) is used for linting
 	- Using VSCode? Install the Biomejs extension for better linting experience
 
+## API Development Setup
+1.. Navigate to the `backend/api` directory
+2. Run `npm i` to install dependencies
+3. Run `npm run start:dev` to start the server
 
-## Common commands
+### Common commands
 
 1. `yarn android` - Start the app on Android
 2. `yarn eas build` - Build the app for production
@@ -25,8 +29,9 @@
 - Expo: Development Environment
 - Expo Router: Navigation
 - Biomejs: Linting
-- Supabase: Database
-- Supabase Edge Functions: Serverless Functions
+- NestJS: Backend
+- Google Cloud Functions + Google Gemini: OCR
+- Github OAuth: Authentication
 
 ### Domain Driven Design
 ```mermaid
@@ -39,7 +44,7 @@ erDiagram
 
 ```
 
-#### Boundary Context
+### Boundary Context
 ```mermaid
 graph LR
     subgraph "Financial Management"
@@ -54,3 +59,16 @@ graph LR
     B --> F
 
 ```
+
+## Commit Convention
+- Basic syntax: `WWIZ-<issue number> <type>(<subject>): <message>`
+- Example: `WWIZ-1 feat(backend): Add user authentication`
+- Types:
+  - `feat`: New feature
+  - `fix`: Bug fix
+  - `docs`: Documentation
+  - `style`: Formatting
+  - `refactor`: Code change that doesn't affect the behavior
+  - `test`: Adding missing tests
+  - `chore`: Maintenance
+

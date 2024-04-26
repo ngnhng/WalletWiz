@@ -6,11 +6,14 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"style": {
+				"useImportType": "off"
+			}
 		}
 	},
 	"files": {
-		"ignore": ["node_modules", "dist", "*.js", "*.d.ts", "*.map"],
+		"ignore": ["node_modules", "dist", "*.js", "*.d.ts", "*.map", "backend"],
 		"ignoreUnknown": true
 	}
 }
