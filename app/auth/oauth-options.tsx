@@ -1,42 +1,35 @@
-import { StatusBar } from "expo-status-bar";
+import { StyleSheet, View, Text, Pressable } from "react-native";
+import { useAppSelector } from "../../hooks/hooks";
 import React from "react";
-import { StyleSheet, Text, View, Image, Pressable } from "react-native";
-import { Link } from "expo-router";
-import { ShieldCheck } from "lucide-react-native";
-import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { completeOnboarding, logout } from "../../store/user/user-slice";
+import { useGitHubOAuth } from "./github";
 
 export default function Page() {
     const user = useAppSelector((state) => state.users);
-    const dispatch = useAppDispatch();
 
     return (
         <View style={styles.container}>
             <View style={styles.innerContainer}>
-                <ShieldCheck size={48} color="#AAC7FF" />
-                <View style={styles.textContainer}>
-                    <Text style={styles.text}>Don't be afraid</Text>
-                    <Text style={styles.smallText}>
-                        We ensure your data privacy. No one really wants their
-                        data to be leaked right?
-                    </Text>
-                </View>
+                <Text style={styles.text}>Sign In</Text>
             </View>
-            <View style={styles.navContainer}>
-                <Link replace href="/home" style={styles.buttonLink}>
-                    <Pressable
-                        onPress={() => {
-                            dispatch(completeOnboarding());
-                        }}
-                    >
-                        <Text>Welcome to WalletWiz!</Text>
-                    </Pressable>
-                </Link>
-            </View>
-            <StatusBar style="auto" />
+            <View style={styles.navContainer}>{GithubOauthButton()}</View>
         </View>
     );
 }
+
+const GithubOauthButton = () => {
+    const { request, promptAsync } = useGitHubOAuth();
+    return (
+        <Pressable
+            disabled={!request}
+            style={styles.githubBtn}
+            onPress={() => {
+                promptAsync();
+            }}
+        >
+            <Text style={styles.text}>Sign in with Github</Text>
+        </Pressable>
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -90,5 +83,12 @@ const styles = StyleSheet.create({
         fontSize: 12,
         textAlign: "center",
         paddingHorizontal: 30,
+    },
+    githubBtn: {
+        backgroundColor: "#000000",
+        color: "#FFFFFF",
+        borderRadius: 10,
+        padding: 10,
+        maxHeight: 50,
     },
 });
