@@ -13,7 +13,7 @@ export const unstable_settings = {
     initialRouteName: "",
 };
 
-export const StateContext = createContext(null);
+export const StateContext = createContext({});
 
 const reducer = (state, action) => {
     switch (action.type) {
