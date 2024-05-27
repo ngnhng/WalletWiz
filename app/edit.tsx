@@ -73,7 +73,7 @@ export default function Page() {
                         mode="outlined"
                         label="Spending Price"
                         value={JSON.stringify(price)}
-                        onChangeText={(text) => setPrice(parseFloat(text))}
+                        onChangeText={(text) => setPrice(Number.parseFloat(text))}
                         style={{
                             width: "100%",
                         }}

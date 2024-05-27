@@ -12,12 +12,8 @@ export default function Page() {
                 <View style={styles.textContainer}>
                     <Text style={styles.text}>Scan directly</Text>
                     <Text style={styles.smallText}>
-<<<<<<< HEAD
                         Lazy to input the data yourself?
                         {"\n"}
-=======
-                        Lazy to input the data yourself?{"\n"}
->>>>>>> accc87b (WWIZ-25 fix(nav): resolve crash)
                         No worries! Just give the app a scan.
                     </Text>
                 </View>
