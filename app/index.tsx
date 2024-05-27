@@ -1,23 +1,17 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Link } from "expo-router";
+import { View } from "react-native";
+import { Redirect } from "expo-router";
+import useOnboarded from "./hooks/useOnboarded";
+import { ONBOARD_TYPE } from "./types";
 
-export default function Page() {
-    return (
-        <View style={styles.container}>
-            <Link replace href="/onboarding/welcome">To Welcome</Link>
-            <StatusBar style="auto" />
-        </View>
-    );
+export default function Page({ navigation }) {
+    const isOnboarded = useOnboarded();
+
+    const getReturn = () => {
+        if (isOnboarded === ONBOARD_TYPE.SKIPPED) return <Redirect href={"/home"} />;
+        if (isOnboarded === ONBOARD_TYPE.BLANK) return <Redirect href={"/onboarding/welcome"} />;
+        return <View></View>;
+    };
+
+    return getReturn();
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#111318",
-        color: "white",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-});

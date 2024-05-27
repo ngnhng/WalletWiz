@@ -13,7 +13,7 @@ export default function Page() {
                     <Text style={styles.text}>Scan directly</Text>
                     <Text style={styles.smallText}>
                         Lazy to input the data yourself?
-                        <br />
+                        {"\n"}
                         No worries! Just give the app a scan.
                     </Text>
                 </View>
