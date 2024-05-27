@@ -49,7 +49,7 @@ export default function Page() {
                             height: 40,
                             borderRadius: 20,
                         }}
-                    ></View>
+                    />
                 </View>
                 <AnimatedCircularProgress size={220} width={15} fill={80} rotation={0} tintColor="#afc5fd" backgroundColor="#3d5875" lineCap="round">
                     {(fill) => (
