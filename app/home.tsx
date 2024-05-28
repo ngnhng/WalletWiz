@@ -4,7 +4,7 @@ import { ScrollView, StyleSheet, View, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { Text, FAB } from "react-native-paper";
-import { router } from 'expo-router';
+import { router } from "expo-router";
 
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -42,14 +42,16 @@ export default function Page() {
                         <Text style={{ ...styles.text, fontSize: 11 }}>Welcome back!</Text>
                         <Text style={{ ...styles.text, fontSize: 14, fontWeight: "bold" }}>First Name Last Name</Text>
                     </View>
-                    <View
-                        style={{
-                            backgroundColor: "white",
-                            width: 40,
-                            height: 40,
-                            borderRadius: 20,
-                        }}
-                    />
+                    <Pressable onPress={() => router.navigate("/user")}>
+                        <View
+                            style={{
+                                backgroundColor: "white",
+                                width: 40,
+                                height: 40,
+                                borderRadius: 20,
+                            }}
+                        />
+                    </Pressable>
                 </View>
                 <AnimatedCircularProgress size={220} width={15} fill={80} rotation={0} tintColor="#afc5fd" backgroundColor="#3d5875" lineCap="round">
                     {(fill) => (
@@ -134,7 +136,7 @@ export default function Page() {
                     label="Add Spending"
                     variant="secondary"
                     onPress={() => {
-                        router.navigate("/new")
+                        router.navigate("/new");
                     }}
                 />
                 <StatusBar backgroundColor={theme.background} style="light" />

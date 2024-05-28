@@ -22,7 +22,7 @@ export default function Page() {
 
     const [currency, setCurrency] = useState("");
     const [resetDay, setResetDay] = useState(1);
-    const [limit, setLimit] = useState(0);
+    const [limit, setLimit] = useState<number>();
 
     return (
         <SafeAreaView
@@ -127,13 +127,90 @@ export default function Page() {
                     }}
                 >
                     <Text style={{ color: theme.primary, fontWeight: "800", alignSelf: "flex-start" }}>Spending</Text>
-                    <RNPickerSelect
-                        onValueChange={(value) => console.log(value)}
-                        items={[
-                            { label: "Football", value: "football" },
-                            { label: "Baseball", value: "baseball" },
-                            { label: "Hockey", value: "hockey" },
-                        ]}
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            width: "100%",
+                        }}
+                    >
+                        <Text variant="bodyLarge">Currency</Text>
+                        <RNPickerSelect
+                            useNativeAndroidPickerStyle={false}
+                            style={{
+                                inputAndroid: {
+                                    color: theme.primary,
+                                    fontWeight: "700",
+                                    borderWidth: 1,
+                                    borderColor: theme.primary,
+                                    paddingVertical: 10,
+                                    paddingHorizontal: 15,
+                                    borderRadius: 10,
+                                },
+                                placeholder: {
+                                    color: theme.outline,
+                                    borderWidth: 1,
+                                    borderColor: theme.outline,
+                                    paddingVertical: 10,
+                                    paddingHorizontal: 15,
+                                    borderRadius: 10,
+                                },
+                            }}
+                            onValueChange={(value) => setCurrency(value)}
+                            items={[
+                                { label: "Football", value: "football" },
+                                { label: "Baseball", value: "baseball" },
+                                { label: "Hockey", value: "hockey" },
+                            ]}
+                        />
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            width: "100%",
+                        }}
+                    >
+                        <Text variant="bodyLarge">Day of reset</Text>
+                        <RNPickerSelect
+                            useNativeAndroidPickerStyle={false}
+                            style={{
+                                inputAndroid: {
+                                    color: theme.primary,
+                                    fontWeight: "700",
+                                    borderWidth: 1,
+                                    borderColor: theme.primary,
+                                    paddingVertical: 10,
+                                    paddingHorizontal: 15,
+                                    borderRadius: 10,
+                                },
+                                placeholder: {
+                                    color: theme.outline,
+                                    borderWidth: 1,
+                                    borderColor: theme.outline,
+                                    paddingVertical: 10,
+                                    paddingHorizontal: 15,
+                                    borderRadius: 10,
+                                },
+                            }}
+                            onValueChange={(value) => setResetDay(value)}
+                            items={[
+                                { label: "Football", value: "football" },
+                                { label: "Baseball", value: "baseball" },
+                                { label: "Hockey", value: "hockey" },
+                            ]}
+                        />
+                    </View>
+                    <TextInput
+                        mode="outlined"
+                        label="Spending Limit"
+                        value={limit?.toString()}
+                        onChangeText={(text) => setLimit(Number.parseFloat(text))}
+                        style={{
+                            width: "100%",
+                        }}
                     />
                 </View>
             </ScrollView>
