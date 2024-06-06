@@ -7,13 +7,14 @@ import { Button } from "react-native-paper";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import { TextInput } from "react-native-paper";
 import { DatePickerInput } from "react-native-paper-dates";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
-import Title from "./components/title";
-import useTheme from "./hooks/useTheme";
+import Title from "../components/title";
+import useTheme from "../hooks/useTheme";
 
 export default function Page() {
     const theme = useTheme();
+    const { id } = useLocalSearchParams();
 
     const [name, setName] = useState<string>();
     const [price, setPrice] = useState<number>(0);
@@ -63,7 +64,7 @@ export default function Page() {
                     <TextInput
                         mode="outlined"
                         label="Spending Name"
-                        value={name}
+                        defaultValue={name}
                         onChangeText={(text) => setName(text)}
                         style={{
                             width: "100%",
@@ -72,7 +73,7 @@ export default function Page() {
                     <TextInput
                         mode="outlined"
                         label="Spending Price"
-                        value={(Number.isNaN(price) ? "" : price).toString()}
+                        defaultValue={(Number.isNaN(price) ? "" : price).toString()}
                         onChangeText={(text) => setPrice(Number.parseFloat(text) ?? 0)}
                         style={{
                             width: "100%",

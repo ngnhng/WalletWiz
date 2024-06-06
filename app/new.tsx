@@ -1,12 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useContext, useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View, Pressable } from "react-native";
+import { ScrollView, View, Pressable, ToastAndroid } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Link } from "expo-router";
-import { Button, Portal, Dialog, Text, TextInput } from "react-native-paper";
-import { DatePickerInput } from "react-native-paper-dates";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Button, Portal, Dialog, Text, TextInput, ActivityIndicator } from "react-native-paper";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import { router } from "expo-router";
+import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 
 import useTheme from "./hooks/useTheme";
 import Item from "./components/item";
@@ -19,6 +19,7 @@ export default function Page() {
     const { state, dispatch } = useContext(StateContext);
 
     const [showDialog, setShowDialog] = useState(false);
+    const [showLoading, setShowLoading] = useState(false);
     const [name, setName] = useState<string>("");
     const [price, setPrice] = useState<number>(0);
 
@@ -29,10 +30,52 @@ export default function Page() {
         return () => {
             dispatch({
                 type: ACTIONS.CLEAR_SPENDING,
-                payload: {}
+                payload: {},
             });
         };
     }, [dispatch]);
+
+    const postSpending = async () => {
+        try {
+            setShowLoading(true);
+
+            const token = await AsyncStorage.getItem("token");
+            const res = await fetch("https://walletwiz-api-fsummwvcba-uc.a.run.app/v1/expenses", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    expenses: state.pending.map((expense) => {
+                        return {
+                            name: expense.name,
+                            category_id: "0",
+                            amount: expense.price,
+                            upload_date: expense.date.toLocaleDateString(),
+                        };
+                    }),
+                }),
+            });
+
+            if (!res.ok) {
+                const text = await res.text();
+                throw new Error(text);
+            }
+
+            ToastAndroid.show("Update spendings completed!", ToastAndroid.LONG);
+            dispatch({
+                type: ACTIONS.CLEAR_SPENDING,
+                payload: {},
+            });
+            router.navigate("/home");
+        } catch (error) {
+            console.error(error);
+            ToastAndroid.show("Cannot update spendings!", ToastAndroid.LONG);
+        } finally {
+            setShowLoading(false);
+        }
+    };
 
     return (
         <SafeAreaView
@@ -86,7 +129,15 @@ export default function Page() {
                     }}
                 >
                     {state.pending.map((spending, idx) => (
-                        <View style={{ width: "100%" }} key={`${spending.name}-${idx}`}>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                gap: 10,
+                                width: "100%",
+                                alignItems: "center",
+                            }}
+                            key={`${spending.name}-${idx}`}
+                        >
                             <Item
                                 data={{
                                     name: spending.name,
@@ -101,6 +152,20 @@ export default function Page() {
                                     setIdx(idx);
                                 }}
                             />
+                            <Pressable
+                                android_ripple={{
+                                    color: "#F07C7C88",
+                                    borderless: true,
+                                }}
+                                onPress={() => {
+                                    dispatch({
+                                        type: ACTIONS.REMOVE_SPENDING,
+                                        payload: idx
+                                    })
+                                }}
+                            >
+                                <Icon2 name="trash-can-outline" size={30} color="#F07C7C" />
+                            </Pressable>
                         </View>
                     ))}
                 </View>
@@ -126,12 +191,23 @@ export default function Page() {
                     rippleColor={theme.primary}
                     icon={"check-all"}
                     labelStyle={{ fontWeight: "bold" }}
-                    onPress={() => console.log("Pressed")}
+                    onPress={() => postSpending()}
+                    disabled={state.pending.length === 0}
                 >
                     Confirm
                 </Button>
             </ScrollView>
             <Portal>
+                {showLoading ? (
+                    <ActivityIndicator
+                        color={theme.primary}
+                        animating={true}
+                        size="large"
+                        style={{ position: "absolute", top: 0, left: 0, bottom: 0, right: 0, backgroundColor: "rgba(0, 0, 0, .5)" }}
+                    />
+                ) : (
+                    ""
+                )}
                 <Dialog
                     visible={showDialog}
                     dismissable={true}
@@ -147,7 +223,7 @@ export default function Page() {
                         <TextInput
                             mode="outlined"
                             label="Spending Name"
-                            value={name}
+                            defaultValue={name}
                             onChangeText={(text) => setName(text)}
                             style={{
                                 width: "100%",
@@ -156,7 +232,7 @@ export default function Page() {
                         <TextInput
                             mode="outlined"
                             label="Spending Price"
-                            value={(Number.isNaN(price) ? "" : price).toString()}
+                            defaultValue={(Number.isNaN(price) ? "" : price).toString()}
                             onChangeText={(text) => setPrice(Number.parseFloat(text) ?? 0)}
                             style={{
                                 width: "100%",

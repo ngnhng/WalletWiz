@@ -13,9 +13,12 @@ export enum TOKEN_STATE {
 export enum ACTIONS {
     SET_THEME = -1,
     ADD_SPENDING = 0,
+    ADD_MULTIPLE_SPENDINGS = 4,
     EDIT_SPENDING = 1,
+    REMOVE_SPENDING = 5,
     CLEAR_SPENDING = 2,
-    SET_USER_INFO = 3
+    SET_USER_INFO = 3,
+    SET_TOKEN = 999999999
 }
 
 export type Spending = {
@@ -42,7 +45,11 @@ export type State = {
         firstname: string,
         lastname: string,
         email: string,
-        token_version: string
+        token_version: string,
+        budget_reset_day: number,
+        budget_limit: number,
+        currency: string
     }
-    pending: Spending[]
+    pending: Spending[],
+    token: string
 }

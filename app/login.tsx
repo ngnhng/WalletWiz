@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, TextInput, Button } from "react-native-paper";
 import { ToastAndroid } from "react-native";
 import useTheme from "./hooks/useTheme";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StateContext } from "./_layout";
+import { ACTIONS } from "./types";
 
 export default function Page() {
     const theme = useTheme();
+
+    const { dispatch } = useContext(StateContext);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -41,7 +45,11 @@ export default function Page() {
 
         const json = await res.json();
         console.log(json);
-        await AsyncStorage.setItem("token", json.token);
+        await AsyncStorage.setItem("token", json.access_token);
+        dispatch({
+            type: ACTIONS.SET_TOKEN,
+            payload: json.access_token
+        })
 
         return router.navigate("/home");
     };

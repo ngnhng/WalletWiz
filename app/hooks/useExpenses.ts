@@ -5,28 +5,44 @@ import { ToastAndroid } from "react-native";
 import { StateContext } from "../_layout";
 import type { Expense } from "../types";
 
-export default function useExpenses() {
+export default function useExpenses(isFocus: boolean) {
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const { state } = useContext(StateContext);
 
     useEffect(() => {
         const fetchExpenses = async () => {
-            const token = await AsyncStorage.getItem("token");
-            const res = await fetch(`https://walletwiz-api-fsummwvcba-uc.a.run.app/v1/expenses/user/${state.userInfo.id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            try {
+                const token = await AsyncStorage.getItem("token");
+                if (!token) return;
 
-            if (!res.ok) {
+                const res = await fetch("https://walletwiz-api-fsummwvcba-uc.a.run.app/v1/expenses", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+    
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(text);
+                }
+    
+                const json = await res.json();
+                // console.log(json);
+                setExpenses(json.map((expense) => {
+                    return {
+                        ...expense,
+                        amount: Number.parseFloat(expense.amount)
+                    }
+                }));
+            } catch (error) {
+                console.error(error);
                 ToastAndroid.show("Cannot retrieve user expenses!", ToastAndroid.LONG);
-                return;
             }
 
-            const json = await res.json();
-            setExpenses(json);
         };
-    }, [state.userInfo.id]);
+
+        fetchExpenses();
+    }, []);
 
     return expenses;
 }

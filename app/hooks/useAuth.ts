@@ -4,11 +4,12 @@ import { ACTIONS, TOKEN_STATE } from "../types";
 
 import { StateContext } from "../_layout";
 
-export default function useAuth() {
+export default function useAuth(isFocus: boolean) {
     const [tokenState, setTokenState] = useState(TOKEN_STATE.LOADING);
     const { state, dispatch } = useContext(StateContext);
 
     useEffect(() => {
+        console.log("Alo")
         const readLocalStorage = async () => {
             const value = await AsyncStorage.getItem("token");
 

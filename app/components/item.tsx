@@ -4,7 +4,7 @@ import { Text } from "react-native-paper";
 import useTheme from "../hooks/useTheme";
 import { router } from "expo-router";
 
-export default function Item({ data, onPress }: { data: { name: string; date: Date; price: number }; onPress?: () => void }) {
+export default function Item({ data, onPress }: { data: { name: string; date: Date; price: number, id?: string }; onPress?: () => void }) {
     const theme = useTheme();
     const { name, date, price } = data;
     return (
@@ -20,7 +20,7 @@ export default function Item({ data, onPress }: { data: { name: string; date: Da
                 android_ripple={{
                     color: "rgba(255 255 255 / .5)",
                 }}
-                onPress={onPress ?? (() => router.navigate("/edit"))}
+                onPress={onPress ?? (() => router.navigate(`/edit/${data.id}`))}
             >
                 <View style={styles.info}>
                     <Text style={{ fontWeight: "700" }} variant="labelLarge">
@@ -29,7 +29,7 @@ export default function Item({ data, onPress }: { data: { name: string; date: Da
                     <Text variant="labelMedium">{date.toDateString()}</Text>
                 </View>
                 <Text style={{ fontWeight: "700", color: theme.secondary }} variant="titleMedium">
-                    {price}
+                    {price.toLocaleString()}
                 </Text>
             </Pressable>
         </View>

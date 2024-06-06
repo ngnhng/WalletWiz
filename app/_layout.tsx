@@ -26,8 +26,12 @@ export const StateContext = createContext<Context>({
             lastname: "",
             email: "",
             token_version: "",
+            budget_limit: 0,
+            budget_reset_day: 1,
+            currency: "VND"
         },
         pending: [],
+        token: "",
     },
     dispatch: () => {},
 });
@@ -37,15 +41,24 @@ const reducer = (state, action) => {
         case ACTIONS.ADD_SPENDING: {
             return { ...state, pending: [...state.pending, action.payload] };
         }
+        case ACTIONS.ADD_MULTIPLE_SPENDINGS: {
+            return { ...state, pending: [...state.pending, ...action.payload] };
+        }
         case ACTIONS.EDIT_SPENDING: {
             state.pending[action.payload.idx] = action.payload.data;
             return { ...state };
+        }
+        case ACTIONS.REMOVE_SPENDING: {
+            return { ...state, pending: [...state.pending.slice(0, action.payload), ...state.pending.slice(action.payload + 1)] };
         }
         case ACTIONS.CLEAR_SPENDING: {
             return { ...state, pending: [] };
         }
         case ACTIONS.SET_USER_INFO: {
-            return { ...state, userInfo: action.payload };
+            return { ...state, userInfo: { ...action.payload, budget_limit: Number.parseFloat(action.payload.budget_limit) }};
+        }
+        case ACTIONS.SET_TOKEN: {
+            return { ...state, token: action.payload };
         }
         default:
             return { ...state };
@@ -62,6 +75,7 @@ export default function Layout() {
             token_version: "",
         },
         pending: [],
+        token: "",
     });
 
     const colorScheme = useColorScheme();
