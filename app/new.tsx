@@ -1,20 +1,29 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useContext, useState } from "react";
-import { ScrollView, StyleSheet, Text, View, Pressable } from "react-native";
+import { ScrollView, StyleSheet, View, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
-import { Button } from "react-native-paper";
-import { SegmentedButtons } from "react-native-paper";
+import { Button, Portal, Dialog, Text, TextInput } from "react-native-paper";
+import { DatePickerInput } from "react-native-paper-dates";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
-import { router } from 'expo-router';
+import { router } from "expo-router";
 
 import useTheme from "./hooks/useTheme";
 import Item from "./components/item";
 
+import { StateContext } from "./_layout";
+import { ACTIONS } from "./types";
+
 export default function Page() {
     const theme = useTheme();
+    const { state, dispatch } = useContext(StateContext);
 
-    const [mode, setMode] = React.useState("manual");
+    const [showDialog, setShowDialog] = useState(false);
+    const [name, setName] = useState<string>("");
+    const [price, setPrice] = useState<number>(0);
+
+    const [isNewSpending, setNewSpending] = useState(false);
+    const [idx, setIdx] = useState(0);
 
     return (
         <SafeAreaView
@@ -50,37 +59,41 @@ export default function Page() {
                         <Icon3 name="arrow-back" size={24} color={theme.primary} />
                     </Pressable>
                 </View>
-                <SegmentedButtons
-                    value={mode}
-                    onValueChange={setMode}
-                    buttons={[
-                        {
-                            value: "manual",
-                            label: "Add Manually",
-                            icon: "format-list-bulleted-type",
-                        },
-                        {
-                            value: "camera",
-                            label: "From Camera",
-                            icon: "camera-plus",
-                        },
-                    ]}
-                />
+                <Button
+                    mode="outlined"
+                    style={{ width: "100%" }}
+                    rippleColor={theme.primary}
+                    icon={"camera-plus"}
+                    labelStyle={{ fontWeight: "bold" }}
+                    onPress={() => router.navigate("/camera")}
+                >
+                    Import from Camera
+                </Button>
                 <View
                     style={{
                         flex: 1,
                         width: "100%",
+                        gap: 10
                     }}
                 >
-                    <View style={{ width: "100%" }}>
-                        <Item
-                            data={{
-                                name: "Lays Classic",
-                                date: "Mar 24, 2024",
-                                price: "28,000",
-                            }}
-                        />
-                    </View>
+                    {state.pending.map((spending, idx) => (
+                        <View style={{ width: "100%" }} key={`${spending.name}-${idx}`}>
+                            <Item
+                                data={{
+                                    name: spending.name,
+                                    date: spending.date,
+                                    price: spending.price,
+                                }}
+                                onPress={() => {
+                                    setName(spending.name);
+                                    setPrice(spending.price);
+                                    setNewSpending(false);
+                                    setShowDialog(true);
+                                    setIdx(idx);
+                                }}
+                            />
+                        </View>
+                    ))}
                 </View>
                 <Button
                     mode="outlined"
@@ -88,7 +101,12 @@ export default function Page() {
                     rippleColor={theme.primary}
                     icon={"plus"}
                     labelStyle={{ fontWeight: "bold" }}
-                    onPress={() => console.log("Pressed")}
+                    onPress={() => {
+                        setName("");
+                        setPrice(0);
+                        setNewSpending(true);
+                        setShowDialog(true);
+                    }}
                 >
                     Add
                 </Button>
@@ -104,6 +122,77 @@ export default function Page() {
                     Confirm
                 </Button>
             </ScrollView>
+            <Portal>
+                <Dialog
+                    visible={showDialog}
+                    dismissable={true}
+                    onDismiss={() => {
+                        setName("");
+                        setPrice(0);
+                        setNewSpending(false);
+                        setShowDialog(false);
+                    }}
+                >
+                    <Dialog.Title>Add spending</Dialog.Title>
+                    <Dialog.Content style={{ gap: 10 }}>
+                        <TextInput
+                            mode="outlined"
+                            label="Spending Name"
+                            value={name}
+                            onChangeText={(text) => setName(text)}
+                            style={{
+                                width: "100%",
+                            }}
+                        />
+                        <TextInput
+                            mode="outlined"
+                            label="Spending Price"
+                            value={(Number.isNaN(price) ? "" : price).toString()}
+                            onChangeText={(text) => setPrice(Number.parseFloat(text) ?? 0)}
+                            style={{
+                                width: "100%",
+                            }}
+                            keyboardType="number-pad"
+                        />
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button
+                            onPress={() => {
+                                if (isNewSpending) {
+                                    dispatch({
+                                        type: ACTIONS.ADD_SPENDING,
+                                        payload: {
+                                            name,
+                                            price,
+                                            date: new Date().toDateString(),
+                                        },
+                                    });
+                                } else {
+                                    dispatch({
+                                        type: ACTIONS.EDIT_SPENDING,
+                                        payload: {
+                                            idx,
+                                            data: {
+                                                name,
+                                                price,
+                                                date: state.pending[idx].date,
+                                            },
+                                        },
+                                    });
+                                }
+
+                                setName("");
+                                setPrice(0);
+
+                                setNewSpending(false);
+                                setShowDialog(false);
+                            }}
+                        >
+                            Done
+                        </Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
         </SafeAreaView>
     );
 }
