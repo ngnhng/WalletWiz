@@ -2,10 +2,10 @@ FROM node:20 as build
 WORKDIR /usr/src/app
 # Do `npm ci` separately so we can cache `node_modules`
 # https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
-COPY package.json package-lock.json ./
-RUN npm clean-install
+COPY package.json pnpm-lock.yaml ./
+RUN npm install -g pnpm && pnpm install
 COPY . .
-RUN npm run build && npm prune --omit=dev
+RUN pnpm run build
 
 FROM node:20-slim
 RUN apt-get update && apt-get install -y \

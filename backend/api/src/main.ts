@@ -1,17 +1,29 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import cors from 'cors';
+import compression from 'compression';
+import express from 'express';
+import Wwiz from './Wwiz';
+
+const server = express();
+// trust first proxy
+server.enable('trust proxy');
+// if behind proxy, different servers may generate different etag values for the same content
+server.disable('etag');
+// remove x-powered-by header, for security reasons
+server.disable('x-powered-by');
+server.use(
+  cors({
+    exposedHeaders: 'xc-db-response',
+  }),
+);
+
+server.use(compression());
+
+//server.set('view engine', 'ejs');
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const config = new DocumentBuilder()
-    .setTitle('Swagger example')
-    .setDescription('The API description')
-    .setVersion('1.0')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
-
-  await app.listen(process.env.PORT || 8080);
+  const httpServer = server.listen(process.env.PORT || 8080, async () => {
+    server.use(await Wwiz.init({}, httpServer, server));
+  });
 }
+
 bootstrap();
