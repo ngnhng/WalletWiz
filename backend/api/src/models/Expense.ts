@@ -16,6 +16,10 @@ export class ExpenseDto {
 
   @ApiProperty()
   @IsNotEmpty()
+  name: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
   category_id: string;
 
   @ApiProperty()
