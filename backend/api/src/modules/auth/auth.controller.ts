@@ -8,6 +8,8 @@ import {
   UserLoginDto,
   UserRefreshTokenDto,
 } from '~/models/User';
+import { AtRtTokenDto } from '~/models/AtRtToken';
+
 import { User } from '~/decorators/user.decorator';
 import {
   ApiTags,
@@ -34,7 +36,7 @@ export class AuthController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 400, description: 'Bad request.' })
-  async signup(@Body() createUserDto: CreateUserDto) {
+  async signup(@Body() createUserDto: CreateUserDto): Promise<AtRtTokenDto> {
     const role = UserRoles.WEB_USER;
     const token_version = '';
     return this.authService.signup({
@@ -55,9 +57,9 @@ export class AuthController {
   @ApiResponse({ status: 404, description: 'User not found.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 400, description: 'Bad request.' })
-  async login(@Body() { email, password }: UserLoginDto): Promise<{
-    token: string;
-  }> {
+  async login(
+    @Body() { email, password }: UserLoginDto,
+  ): Promise<AtRtTokenDto> {
     return this.authService.basicLogin(email, password);
   }
 
@@ -76,9 +78,7 @@ export class AuthController {
   async refreshToken(
     @User() user: UserDto,
     @Body() { token }: { token: string },
-  ): Promise<{
-    token: string;
-  }> {
+  ): Promise<AtRtTokenDto> {
     return this.authService.refreshToken({
       old_token: token,
       token_version: user.token_version,

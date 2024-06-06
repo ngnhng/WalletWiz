@@ -1,4 +1,12 @@
-import { IsEmail, IsNotEmpty, Length } from 'class-validator';
+import {
+  IsDecimal,
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  Length,
+  Max,
+  Min,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
@@ -19,6 +27,16 @@ export class UserDto {
   email: string;
 
   @ApiProperty()
+  @IsDecimal()
+  @Min(1)
+  @Max(28)
+  budget_limit?: string;
+
+  @ApiProperty()
+  @IsNumber()
+  budget_reset_day?: number;
+
+  @ApiProperty()
   @Length(6, 255)
   encrypted_password?: string;
 
@@ -30,8 +48,30 @@ export class UserDto {
   @IsNotEmpty()
   salt?: string;
 
+  @ApiProperty()
+  @IsNotEmpty()
+  currency?: string;
+
   constructor(user: UserDto) {
     Object.assign(this, user);
+  }
+}
+
+export class EditUserBudgetDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  limit?: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  reset_day?: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  currency?: string;
+
+  constructor(budget: EditUserBudgetDto) {
+    Object.assign(this, budget);
   }
 }
 

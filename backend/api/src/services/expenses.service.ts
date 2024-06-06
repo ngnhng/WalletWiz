@@ -46,4 +46,23 @@ export class ExpensesService {
       .where({ id: expense_id })
       .update({ category_id });
   }
+
+  async uncategorizeExpense(expense_id: string) {
+    return this.knex<ExpenseDto>(Tables.EXPENSES)
+      .where({ id: expense_id })
+      .update({ category_id: null });
+  }
+
+  async addExpenses(user_id: string, expenses: ExpenseDto[]) {
+    return this.knex<ExpenseDto>(Tables.EXPENSES).insert(
+      expenses.map((expense) => ({ ...expense, user_id })),
+    );
+  }
+
+  async updateExpense(user_id: string, expense: ExpenseDto) {
+    await this.knex<ExpenseDto>(Tables.EXPENSES)
+      .where({ id: expense.id, user_id })
+      .update(expense);
+    return this.getExpenseById(expense.id);
+  }
 }
