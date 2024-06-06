@@ -94,6 +94,18 @@ export class UserMeDto {
 
   @ApiProperty()
   @IsNotEmpty()
+  budget_limit: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  budget_reset_day: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  currency: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
   token_version: string;
 
   constructor(user: UserDto) {

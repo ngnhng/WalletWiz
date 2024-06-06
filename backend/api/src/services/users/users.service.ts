@@ -33,6 +33,9 @@ export class UsersService {
       firstname: user.firstname,
       lastname: user.lastname,
       token_version: user.token_version,
+      budget_limit: user.budget_limit,
+      budget_reset_day: user.budget_reset_day,
+      currency: user.currency,
     };
   }
 
