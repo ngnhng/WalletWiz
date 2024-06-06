@@ -2,9 +2,9 @@ import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import { Text } from "react-native-paper";
 import useTheme from "../hooks/useTheme";
-import { router } from 'expo-router';
+import { router } from "expo-router";
 
-export default function Item({ data }) {
+export default function Item({ data, onPress }: { data: { name: string; date: Date; price: number }; onPress?: () => void }) {
     const theme = useTheme();
     const { name, date, price } = data;
     return (
@@ -20,14 +20,13 @@ export default function Item({ data }) {
                 android_ripple={{
                     color: "rgba(255 255 255 / .5)",
                 }}
-                onPress={() => router.navigate("/edit")}
-
+                onPress={onPress ?? (() => router.navigate("/edit"))}
             >
                 <View style={styles.info}>
                     <Text style={{ fontWeight: "700" }} variant="labelLarge">
                         {name}
                     </Text>
-                    <Text variant="labelMedium">{date}</Text>
+                    <Text variant="labelMedium">{date.toDateString()}</Text>
                 </View>
                 <Text style={{ fontWeight: "700", color: theme.secondary }} variant="titleMedium">
                     {price}

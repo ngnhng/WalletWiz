@@ -97,8 +97,8 @@ export default function Page() {
                         <Item
                             data={{
                                 name: "Lays Classic",
-                                date: "Mar 24, 2024",
-                                price: "28,000",
+                                date: new Date(),
+                                price: 28000,
                             }}
                         />
                         <Pressable
@@ -121,8 +121,8 @@ export default function Page() {
                         <Item
                             data={{
                                 name: "Lays Classic",
-                                date: "Mar 24, 2024",
-                                price: "28,000",
+                                date: new Date(),
+                                price: 28000,
                             }}
                         />
                         <Pressable
@@ -145,8 +145,8 @@ export default function Page() {
                         <Item
                             data={{
                                 name: "Lays Classic",
-                                date: "Mar 24, 2024",
-                                price: "28,000",
+                                date: new Date(),
+                                price: 28000,
                             }}
                         />
                         <Pressable
@@ -169,8 +169,8 @@ export default function Page() {
                         <Item
                             data={{
                                 name: "Lays Classic",
-                                date: "Mar 24, 2024",
-                                price: "28,000",
+                                date: new Date(),
+                                price: 28000,
                             }}
                         />
                         <Pressable

@@ -5,5 +5,17 @@ export enum ONBOARD_TYPE {
 }
 
 export enum ACTIONS {
-    SET_THEME = -1
+    SET_THEME = -1,
+    ADD_SPENDING = 0,
+    EDIT_SPENDING = 1
+}
+
+export type Spending = {
+    name: string,
+    price: number,
+    date: Date
+}
+
+export type State = {
+    pending: Spending[]
 }
