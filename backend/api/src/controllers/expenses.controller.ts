@@ -15,7 +15,12 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ExpenseDto, NewExpenseDto, NewExpensesDto } from '../models/Expense';
+import {
+  EditExpenseDto,
+  ExpenseDto,
+  NewExpenseDto,
+  NewExpensesDto,
+} from '../models/Expense';
 import { ExpensesService } from '../services/expenses.service';
 import { User } from '../decorators/user.decorator';
 import { UserDto } from '../models/User';
@@ -113,7 +118,7 @@ export class ExpensesController {
   @ApiResponse({
     status: 200,
     description: 'The expense has been successfully edited.',
-    type: ExpenseDto,
+    type: EditExpenseDto,
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Not found.' })
@@ -122,7 +127,7 @@ export class ExpensesController {
   async editExpense(
     @User() user: UserDto,
     @Param('expense_id') expenseId: string,
-    @Body() payload: ExpenseDto,
+    @Body() payload: EditExpenseDto,
   ): Promise<ExpenseDto> {
     const userId = user.id;
     return this.expensesService.updateExpense(userId, payload);
