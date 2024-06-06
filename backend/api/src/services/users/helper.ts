@@ -7,18 +7,19 @@ import { UserDto } from '~/models/User';
 export function genJwt(
   user: UserDto & { extra?: Record<string, any> },
   config: WwizConfig,
+  refresh?: 'refresh',
 ) {
+  const expiresIn = refresh ? '7d' : '10h';
   return jwt.sign(
     {
       ...(user.extra || {}),
       email: user.email,
       id: user.id,
-    //  roles: user.roles,
       token_version: user.token_version,
     },
     config.auth.jwt.secret,
     // todo: better typing
-    { expiresIn: '10h', ...(config.auth.jwt.options as any) },
+    { expiresIn, ...(config.auth.jwt.options as any) },
   );
 }
 

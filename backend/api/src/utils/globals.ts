@@ -3,7 +3,7 @@ export enum Tables {
   RECEIPTS = 'receipts',
   EXPENSES = 'expenses',
   CATEGORIES = 'categories',
-  BUDGETS = 'budgets',
+  BUDGET_HISTORIES = 'budget_histories',
 }
 
 export enum UserRoles {

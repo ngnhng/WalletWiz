@@ -6,9 +6,9 @@ import Wwiz from '~/Wwiz';
 import { Injectable } from '@nestjs/common';
 import { promisify } from 'util';
 import { genJwt } from '~/services/users/helper';
-import { UserRoles } from '~/utils/globals';
 import { CreateUserDto, UserDto, UserRefreshTokenDto } from '~/models/User';
 import { WwizError } from '../../helpers/catch-error';
+import { AtRtTokenDto } from '../../models/AtRtToken';
 
 @Injectable()
 export class AuthService {
@@ -47,7 +47,8 @@ export class AuthService {
   async login(user: UserDto) {
     const payload = user;
     return {
-      token: genJwt(payload, Wwiz.getConfig()),
+      access_token: genJwt(payload, Wwiz.getConfig()),
+      refresh_token: genJwt(payload, Wwiz.getConfig(), 'refresh'),
     };
   }
 
@@ -114,19 +115,20 @@ export class AuthService {
 
   async refreshToken(
     refreshPayload: UserRefreshTokenDto,
-  ): Promise<{ token: string }> {
+  ): Promise<AtRtTokenDto> {
     const { email, token_version } = refreshPayload;
-
-    await this.updateTokenVersion(email);
 
     const user = await this.usersService.getByEmail(email);
 
     if (!user.token_version || user.token_version !== token_version) {
       WwizError.badRequest({
-        customMessage: 'Token Expired. Please login again.',
+        customMessage: 'Token Invalidated. Please login again.',
       });
     }
-    return this.login(user);
+
+    const refreshedUser = await this.updateTokenVersion(email);
+
+    return this.login(refreshedUser);
   }
 
   private async updateTokenVersion(email: string) {
