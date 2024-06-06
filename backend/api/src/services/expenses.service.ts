@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectConnection } from 'nest-knexjs';
-import { ExpenseDto } from '../models/Expense';
+import { ExpenseDto, NewExpenseDto, NewExpensesDto } from '../models/Expense';
 import { Tables } from '../utils/globals';
 
 @Injectable()
@@ -53,9 +53,9 @@ export class ExpensesService {
       .update({ category_id: null });
   }
 
-  async addExpenses(user_id: string, expenses: ExpenseDto[]) {
+  async addExpenses(user_id: string, payload: NewExpensesDto) {
     return this.knex<ExpenseDto>(Tables.EXPENSES).insert(
-      expenses.map((expense) => ({ ...expense, user_id })),
+      payload.expenses.map((expense) => ({ ...expense, user_id })),
     );
   }
 

@@ -15,7 +15,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ExpenseDto } from '../models/Expense';
+import { ExpenseDto, NewExpenseDto, NewExpensesDto } from '../models/Expense';
 import { ExpensesService } from '../services/expenses.service';
 import { User } from '../decorators/user.decorator';
 import { UserDto } from '../models/User';
@@ -97,13 +97,12 @@ export class ExpensesController {
   @ApiResponse({
     status: 201,
     description: 'The expenses have been successfully added.',
-    type: ExpenseDto,
-    isArray: true,
+    type: NewExpensesDto,
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 400, description: 'Bad request.' })
   @ApiBearerAuth()
-  async addExpenses(@User() user: UserDto, @Body() expenses: ExpenseDto[]) {
+  async addExpenses(@User() user: UserDto, @Body() expenses: NewExpensesDto) {
     const userId = user.id;
     return this.expensesService.addExpenses(userId, expenses);
   }
