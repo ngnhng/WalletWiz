@@ -43,6 +43,32 @@ export class ExpenseDto {
   }
 }
 
+export class EditExpenseDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  id: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  category_id: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  amount: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  upload_date: string;
+
+  constructor(expense: EditExpenseDto) {
+    Object.assign(this, expense);
+  }
+}
+
 export class NewExpenseDto {
   @ApiProperty()
   @IsNotEmpty()
