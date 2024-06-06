@@ -4,10 +4,18 @@ export enum ONBOARD_TYPE {
     BLANK = 2
 }
 
+export enum TOKEN_STATE {
+    LOADING = 0,
+    NULL = 1,
+    AUTHORIZED = 2
+}
+
 export enum ACTIONS {
     SET_THEME = -1,
     ADD_SPENDING = 0,
-    EDIT_SPENDING = 1
+    EDIT_SPENDING = 1,
+    CLEAR_SPENDING = 2,
+    SET_USER_INFO = 3
 }
 
 export type Spending = {
@@ -16,6 +24,25 @@ export type Spending = {
     date: Date
 }
 
+export type Expense = {
+    id: string,
+    iid: string,
+    user_id: string,
+    name: string,
+    category_id: string,
+    amount: number,
+    upload_date: string,
+    created_at: string,
+    updated_at: string
+}
+
 export type State = {
+    userInfo: {
+        id: string,
+        firstname: string,
+        lastname: string,
+        email: string,
+        token_version: string
+    }
     pending: Spending[]
 }

@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useContext, useState, useRef } from "react";
-import { ScrollView, StyleSheet, View, Pressable } from "react-native";
+import { ScrollView, StyleSheet, View, Pressable, ToastAndroid } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { FAB } from "react-native-paper";
@@ -20,8 +20,37 @@ export default function Page() {
     const { hasPermission } = useCameraPermission();
     const format = useCameraFormat(device, [{ videoResolution: "max" }, { photoResolution: "max" }]);
 
-    if (!hasPermission) return <Text>Please allow Camera permission</Text>;
-    if (!device) return <Text>No device</Text>;
+    if (!hasPermission) {
+        Camera.requestCameraPermission();
+        return (
+            <SafeAreaView
+                style={{
+                    flexGrow: 1,
+                    backgroundColor: theme.background,
+                    padding: 40,
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <Text>Please allow Camera permission</Text>
+            </SafeAreaView>
+        );
+    }
+
+    if (!device)
+        return (
+            <SafeAreaView
+                style={{
+                    flexGrow: 1,
+                    backgroundColor: theme.background,
+                    padding: 40,
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <Text>No device</Text>
+            </SafeAreaView>
+        );
 
     const takePhoto = async () => {
         if (!camera.current) return;
@@ -30,7 +59,40 @@ export default function Page() {
         const result = await fetch(`file://${file.path}`);
         const data = await result.blob();
 
-        router.navigate("/new");
+        const convertBlobToBase64 = (blob: Blob) => new Promise((resolve, reject) => {
+            const reader = new FileReader;
+            reader.onerror = reject;
+            reader.onload = () => {
+                resolve(reader.result);
+            };
+            reader.readAsDataURL(blob);
+        });
+
+        const base64 = await convertBlobToBase64(data);
+        console.log((base64 as string).slice(0, 100));
+
+        const res = await fetch("https://asia-southeast1-savvy-theory-398708.cloudfunctions.net/ocr?lang=vie&format=googleai", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                image: base64
+            })
+        })
+
+        if (!res.ok) {
+            const json = await res.text();
+            console.log(json)
+
+            ToastAndroid.show("An error occured", ToastAndroid.LONG);
+            return;
+        }
+
+        const json = await res.json();
+        console.log(json)
+
+        // router.navigate("/new");
     };
 
     return (

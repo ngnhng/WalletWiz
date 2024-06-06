@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { ToastAndroid } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, TextInput, Button } from "react-native-paper";
 import useTheme from "./hooks/useTheme";
+import { router } from "expo-router";
 
 export default function Page() {
     const theme = useTheme();
@@ -10,6 +13,51 @@ export default function Page() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+
+    const postSignUp = async () => {
+        if (username === "") {
+            ToastAndroid.show("Username cannot be empty!", ToastAndroid.LONG);
+            return;
+        }
+
+        if (email === "") {
+            ToastAndroid.show("Email cannot be empty!", ToastAndroid.LONG);
+            return;
+        }
+
+        if (password === "") {
+            ToastAndroid.show("Password cannot be empty!", ToastAndroid.LONG);
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            ToastAndroid.show("Password and Confirm Password mismatch!", ToastAndroid.LONG);
+            return;
+        }
+
+        const res = await fetch("https://walletwiz-api-fsummwvcba-uc.a.run.app/v1/auth/users/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                firstname: username,
+                lastname: "temp",
+                email: email,
+                password: password,
+            }),
+        });
+
+        if (!res.ok) {
+            ToastAndroid.show("An error occurred while trying to sign up!", ToastAndroid.LONG);
+            return;
+        }
+
+        const json = await res.json();
+        await AsyncStorage.setItem("token", json.token);
+
+        return router.navigate("/home");
+    };
 
     return (
         <SafeAreaView
@@ -61,7 +109,7 @@ export default function Page() {
                 style={{ width: "100%" }}
                 rippleColor={theme.primary}
                 labelStyle={{ fontWeight: "bold" }}
-                onPress={() => console.log("Pressed")}
+                onPress={() => postSignUp()}
             >
                 Sign Up
             </Button>
@@ -71,7 +119,7 @@ export default function Page() {
                 rippleColor={theme.primary}
                 icon="chevron-left"
                 labelStyle={{ fontWeight: "bold" }}
-                onPress={() => console.log("Pressed")}
+                onPress={() => router.back()}
             >
                 Back to Login
             </Button>

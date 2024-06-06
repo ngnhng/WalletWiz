@@ -15,17 +15,21 @@ export const unstable_settings = {
 
 type Context = {
     state: State;
-    dispatch: (action: {
-        type: ACTIONS,
-        payload: unknown
-    }) => void;
+    dispatch: (action: { type: ACTIONS; payload: unknown }) => void;
 };
 
 export const StateContext = createContext<Context>({
     state: {
-        pending: []
+        userInfo: {
+            id: "",
+            firstname: "",
+            lastname: "",
+            email: "",
+            token_version: "",
+        },
+        pending: [],
     },
-    dispatch: () => {}
+    dispatch: () => {},
 });
 
 const reducer = (state, action) => {
@@ -37,6 +41,12 @@ const reducer = (state, action) => {
             state.pending[action.payload.idx] = action.payload.data;
             return { ...state };
         }
+        case ACTIONS.CLEAR_SPENDING: {
+            return { ...state, pending: [] };
+        }
+        case ACTIONS.SET_USER_INFO: {
+            return { ...state, userInfo: action.payload };
+        }
         default:
             return { ...state };
     }
@@ -44,6 +54,13 @@ const reducer = (state, action) => {
 
 export default function Layout() {
     const [state, dispatch] = useReducer(reducer, {
+        userInfo: {
+            id: "",
+            firstname: "",
+            lastname: "",
+            email: "",
+            token_version: "",
+        },
         pending: [],
     });
 

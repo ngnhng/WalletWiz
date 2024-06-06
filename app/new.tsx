@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
@@ -24,6 +24,15 @@ export default function Page() {
 
     const [isNewSpending, setNewSpending] = useState(false);
     const [idx, setIdx] = useState(0);
+
+    useEffect(() => {
+        return () => {
+            dispatch({
+                type: ACTIONS.CLEAR_SPENDING,
+                payload: {}
+            });
+        };
+    }, [dispatch]);
 
     return (
         <SafeAreaView
@@ -73,7 +82,7 @@ export default function Page() {
                     style={{
                         flex: 1,
                         width: "100%",
-                        gap: 10
+                        gap: 10,
                     }}
                 >
                     {state.pending.map((spending, idx) => (
@@ -164,7 +173,7 @@ export default function Page() {
                                         payload: {
                                             name,
                                             price,
-                                            date: new Date().toDateString(),
+                                            date: new Date(),
                                         },
                                     });
                                 } else {
