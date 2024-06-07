@@ -1,7 +1,7 @@
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class BudgetDto {
+export class BudgetHistoriesDto {
   @ApiProperty()
   @IsNotEmpty()
   id: string;
@@ -12,11 +12,19 @@ export class BudgetDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  month: number;
+  limit: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  amount: number;
+  reset_day: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  valid_from: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  valid_to: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -26,7 +34,7 @@ export class BudgetDto {
   @IsNotEmpty()
   updated_at: string;
 
-  constructor(budget: BudgetDto) {
+  constructor(budget: BudgetHistoriesDto) {
     Object.assign(this, budget);
   }
 }

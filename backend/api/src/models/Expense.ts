@@ -42,3 +42,63 @@ export class ExpenseDto {
     Object.assign(this, expense);
   }
 }
+
+export class EditExpenseDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  id: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  category_id: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  amount: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  upload_date: string;
+
+  constructor(expense: EditExpenseDto) {
+    Object.assign(this, expense);
+  }
+}
+
+export class NewExpenseDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  category_id: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  amount: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  upload_date: string;
+
+  constructor(expense: NewExpenseDto) {
+    Object.assign(this, expense);
+  }
+}
+
+export class NewExpensesDto {
+  @ApiProperty({
+    type: [NewExpenseDto],
+  })
+  @IsNotEmpty()
+  expenses: NewExpenseDto[];
+
+  constructor(expenses: NewExpensesDto) {
+    Object.assign(this, expenses);
+  }
+}
