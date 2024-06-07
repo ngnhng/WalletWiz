@@ -132,4 +132,43 @@ export class ExpensesController {
     const userId = user.id;
     return this.expensesService.updateExpense(userId, payload);
   }
+
+  @Version('1')
+  @ApiOperation({ summary: 'Delete user expense' })
+  @Delete('/v1/expenses/:expense_id')
+  @ApiResponse({
+    status: 200,
+    description: 'The expense has been successfully deleted.',
+    type: ExpenseDto,
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 404, description: 'Not found.' })
+  @ApiResponse({ status: 400, description: 'Bad request.' })
+  @ApiBearerAuth()
+  async deleteExpense(
+    @User() user: UserDto,
+    @Param('expense_id') expenseId: string,
+  ): Promise<ExpenseDto> {
+    const userId = user.id;
+    return this.expensesService.deleteExpense(userId, expenseId);
+  }
+
+  @Version('1')
+  @ApiOperation({ summary: 'Get user expense' })
+  @Get('/v1/expenses/:expense_id')
+  @ApiResponse({
+    status: 200,
+    description: 'The expense has been successfully obtained.',
+    type: ExpenseDto,
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 404, description: 'Not found.' })
+  @ApiBearerAuth()
+  async getExpense(
+    @User() user: UserDto,
+    @Param('expense_id') expenseId: string,
+  ): Promise<ExpenseDto> {
+    const userId = user.id;
+    return this.expensesService.getExpenseByUserAndId(userId, expenseId);
+  }
 }
