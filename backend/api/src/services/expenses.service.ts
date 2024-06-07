@@ -1,7 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Knex } from 'knex';
 import { InjectConnection } from 'nest-knexjs';
-import { EditExpenseDto, ExpenseDto, NewExpenseDto, NewExpensesDto } from '../models/Expense';
+import {
+  EditExpenseDto,
+  ExpenseDto,
+  NewExpenseDto,
+  NewExpensesDto,
+} from '../models/Expense';
 import { Tables } from '../utils/globals';
 
 @Injectable()
@@ -59,10 +64,27 @@ export class ExpensesService {
     );
   }
 
+  async getExpenseByUserAndId(user_id: string, expense_id: string) {
+    return this.knex<ExpenseDto>(Tables.EXPENSES)
+      .where({ user_id, id: expense_id })
+      .first();
+  }
+
   async updateExpense(user_id: string, expense: EditExpenseDto) {
     await this.knex<ExpenseDto>(Tables.EXPENSES)
       .where({ id: expense.id, user_id })
       .update(expense);
     return this.getExpenseById(expense.id);
+  }
+
+  async deleteExpense(user_id: string, expense_id: string) {
+    const expense = await this.getExpenseByUserAndId(user_id, expense_id);
+    if (!expense) {
+      return null;
+    }
+    await this.knex<ExpenseDto>(Tables.EXPENSES)
+      .where({ id: expense_id, user_id })
+      .del();
+    return expense;
   }
 }
