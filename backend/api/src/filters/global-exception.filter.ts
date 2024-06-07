@@ -32,6 +32,24 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
     exception = this.handleBadRequestException(exception);
 
+    this.sentryClient?.instance().setContext('Request', {
+      url: request.url,
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+    this.sentryClient?.instance().setContext('Response', {
+      statusCode: response.statusCode,
+      headers: response.getHeaders(),
+    });
+    this.sentryClient?.instance().setContext('Exception', {
+      name: exception.name,
+      message: exception.message,
+      stack: exception.stack,
+    });
+
+    this.sentryClient?.instance().captureException(exception);
+
     this.logger.error(exception.stack);
 
     const dbError = this.getDatabaseError(exception);
