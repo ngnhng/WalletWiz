@@ -3,6 +3,7 @@ const Tesseract = require("tesseract.js");
 const cheerio = require("cheerio");
 const dotenv = require("dotenv");
 const fs = require("fs");
+const { jsonrepair } = require("jsonrepair");
 
 dotenv.config();
 
@@ -153,7 +154,7 @@ const googleAiProcessor = async (text) => {
 
     const response = result.response;
 
-    const responseText = response.text();
+    const responseText = jsonrepair(response.text());
     console.log(responseText);
     const jsonNotationRegex = /```json([\s\S]*?)```/g;
     const jsonMatch = jsonNotationRegex.exec(responseText);
