@@ -52,7 +52,7 @@ export default function Page() {
                             name: expense.name,
                             category_id: "0",
                             amount: expense.price,
-                            upload_date: expense.date.toLocaleDateString(),
+                            upload_date: expense.date.toLocaleDateString("en-US"),
                         };
                     }),
                 }),
@@ -68,6 +68,10 @@ export default function Page() {
                 type: ACTIONS.CLEAR_SPENDING,
                 payload: {},
             });
+            dispatch({
+                type: ACTIONS.REQUEST_UPDATE,
+                payload: ""
+            })
             router.navigate("/home");
         } catch (error) {
             console.error(error);

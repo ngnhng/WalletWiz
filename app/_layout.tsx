@@ -32,6 +32,7 @@ export const StateContext = createContext<Context>({
         },
         pending: [],
         token: "",
+        update: false
     },
     dispatch: () => {},
 });
@@ -59,6 +60,9 @@ const reducer = (state, action) => {
         }
         case ACTIONS.SET_TOKEN: {
             return { ...state, token: action.payload };
+        }
+        case ACTIONS.REQUEST_UPDATE: {
+            return { ...state, update: !state.update }
         }
         default:
             return { ...state };

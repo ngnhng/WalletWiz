@@ -83,7 +83,7 @@ export default function Page() {
                 });
 
             const base64 = await convertBlobToBase64(data);
-            console.log((base64 as string).slice(0, 500));
+            // console.log((base64 as string).slice(0, 500));
 
             const res = await fetch("http://localhost:8080/ocr?lang=vie&format=googleai", {
                 method: "POST",
@@ -104,7 +104,7 @@ export default function Page() {
             }
 
             const json = await res.json();
-            console.log(json);
+            // console.log(json);
 
             dispatch({
                 type: ACTIONS.ADD_MULTIPLE_SPENDINGS,

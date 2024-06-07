@@ -52,7 +52,7 @@ export default function Page() {
 
         try {
             const token = await AsyncStorage.getItem("token");
-            console.log(value, token, state.userInfo.id);
+            // console.log(value, token, state.userInfo.id);
 
             setLimit(value);
             setIsLoading(true);

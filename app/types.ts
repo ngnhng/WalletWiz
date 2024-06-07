@@ -18,6 +18,7 @@ export enum ACTIONS {
     REMOVE_SPENDING = 5,
     CLEAR_SPENDING = 2,
     SET_USER_INFO = 3,
+    REQUEST_UPDATE = 10,
     SET_TOKEN = 999999999
 }
 
@@ -51,5 +52,6 @@ export type State = {
         currency: string
     }
     pending: Spending[],
-    token: string
+    token: string,
+    update: boolean
 }

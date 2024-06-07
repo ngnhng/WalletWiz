@@ -29,7 +29,7 @@ export default function Page() {
     const { state } = useContext(StateContext);
 
     const expensesTotal = Math.round(
-        expenses.reduce<number>((accm, curr) => {
+        (expenses ?? []).reduce<number>((accm, curr) => {
             return accm + curr.amount;
         }, 0)
     );
@@ -128,18 +128,22 @@ export default function Page() {
                             </Text>
                         </Link>
                     </View>
-                    {expenses.map((expense) => (
-                        <View style={{ width: "100%" }} key={expense.id}>
-                            <Item
-                                data={{
-                                    id: expense.id,
-                                    name: expense.name,
-                                    date: new Date(),
-                                    price: expense.amount,
-                                }}
-                            />
-                        </View>
-                    ))}
+                    {expenses ? (
+                        expenses?.slice(0, 3).map((expense) => (
+                            <View style={{ width: "100%" }} key={expense.id}>
+                                <Item
+                                    data={{
+                                        id: expense.id,
+                                        name: expense.name,
+                                        date: new Date(expense.upload_date),
+                                        price: expense.amount,
+                                    }}
+                                />
+                            </View>
+                        ))
+                    ) : (
+                        <ActivityIndicator color={theme.primary} animating={true} size="large" />
+                    )}
                 </View>
                 <FAB
                     icon="pencil-plus"

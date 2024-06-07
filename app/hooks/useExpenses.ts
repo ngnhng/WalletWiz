@@ -6,9 +6,10 @@ import { StateContext } from "../_layout";
 import type { Expense } from "../types";
 
 export default function useExpenses(isFocus: boolean) {
-    const [expenses, setExpenses] = useState<Expense[]>([]);
+    const [expenses, setExpenses] = useState<Expense[]>();
     const { state } = useContext(StateContext);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Needed for reloading
     useEffect(() => {
         const fetchExpenses = async () => {
             try {
@@ -42,7 +43,7 @@ export default function useExpenses(isFocus: boolean) {
         };
 
         fetchExpenses();
-    }, []);
+    }, [state.update, state.token]);
 
     return expenses;
 }

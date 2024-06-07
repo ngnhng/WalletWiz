@@ -8,8 +8,9 @@ export default function useAuth(isFocus: boolean) {
     const [tokenState, setTokenState] = useState(TOKEN_STATE.LOADING);
     const { state, dispatch } = useContext(StateContext);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: Needed for reloading
     useEffect(() => {
-        console.log("Alo")
+        // console.log("Alo")
         const readLocalStorage = async () => {
             const value = await AsyncStorage.getItem("token");
 
@@ -18,7 +19,7 @@ export default function useAuth(isFocus: boolean) {
                 return;
             }
 
-            console.log(value);
+            // console.log(value);
 
             // const res = await fetch("https://walletwiz-api-fsummwvcba-uc.a.run.app/v1/auth/token/refresh", {
             //     method: "POST",
@@ -45,7 +46,7 @@ export default function useAuth(isFocus: boolean) {
             });
 
             const userJson = await userRes.json();
-            console.log(userJson)
+            // console.log(userJson)
             dispatch({
                 type: ACTIONS.SET_USER_INFO,
                 payload: userJson,
@@ -55,7 +56,7 @@ export default function useAuth(isFocus: boolean) {
         };
 
         readLocalStorage();
-    }, [dispatch]);
+    }, [dispatch, state.token, isFocus]);
 
     return tokenState;
 }
