@@ -1,6 +1,10 @@
 const functions = require("@google-cloud/functions-framework");
 const Tesseract = require("tesseract.js");
 const cheerio = require("cheerio");
+const dotenv = require("dotenv");
+const fs = require("fs");
+
+dotenv.config();
 
 // Define constants for the different OCR formats
 const OCR_FORMATS = {
@@ -21,9 +25,13 @@ functions.http("ocr", async (req, res) => {
         const ocrLanguage = req.query.lang || "eng";
         const ocrFormat = req.query.format || OCR_FORMATS.HOCR;
 
-        const imageBuffer = Buffer.from(base64Image, "base64");
+        // const imageBuffer = Buffer.from(base64Image, "base64");
+        // const base64Data = base64Image.replace(/^data:image\/jpeg;base64,/, "");
+        // fs.writeFileSync("out.png", base64Data, "base64", function (err) {
+        //     console.log(err);
+        // });
 
-        const result = await Tesseract.recognize(imageBuffer, ocrLanguage);
+        const result = await Tesseract.recognize(base64Image, ocrLanguage);
 
         switch (ocrFormat) {
             case OCR_FORMATS.TEXT:
@@ -81,6 +89,7 @@ functions.http("ocr", async (req, res) => {
                 // process the words to get the final result
                 // convert to string and send to googleAI
                 const text = words.flat().join(" ");
+                // console.log(text);
                 const response = await googleAiProcessor(text);
                 return res.status(200).json(response);
 
@@ -132,7 +141,7 @@ const googleAiProcessor = async (text) => {
 
     const parts = [
         {
-            text: "Infer the correct items and prices from this groceries bill OCR generated text that have been transformed to be a 2D array of words,. Provide the result in JSON of this format: \n{result: [{item, price}]}\n\nProvide only the final result in raw text formatted as JSON (no markdown). If price of an item is not found, set null.",
+            text: 'Infer the correct items and prices from this groceries bill OCR generated text that have been transformed to be a 2D array of words,. Provide the result in JSON of this format: { "result": [{item, price}]}. Do not include json markdown notation. Provide only the final raw JSON result. If price of an item is not found, set null.',
         },
         { text: `input: ${text}` },
     ];
@@ -145,15 +154,23 @@ const googleAiProcessor = async (text) => {
     const response = result.response;
 
     const responseText = response.text();
-	console.log(responseText);
+    console.log(responseText);
     const jsonNotationRegex = /```json([\s\S]*?)```/g;
     const jsonMatch = jsonNotationRegex.exec(responseText);
 
-    if (jsonMatch && jsonMatch[1]) {
-        const jsonStr = jsonMatch[1].trim();
-        const jsonObj = JSON.parse(jsonStr);
+    // if (jsonMatch && jsonMatch[1]) {
+    //     const jsonStr = jsonMatch[1].trim();
+    //     const jsonObj = JSON.parse(jsonStr);
+    //     return jsonObj;
+    // } else {
+    //     throw new Error("Invalid JSON response");
+    // }
+
+    try {
+        const jsonObj = JSON.parse(responseText);
         return jsonObj;
-    } else {
+    } catch (error) {
+        console.error(error);
         throw new Error("Invalid JSON response");
     }
 };
