@@ -85,7 +85,7 @@ export default function Page() {
             const base64 = await convertBlobToBase64(data);
             // console.log((base64 as string).slice(0, 500));
 
-            const res = await fetch("http://localhost:8080/ocr?lang=vie&format=googleai", {
+            const res = await fetch("https://asia-southeast1-savvy-theory-398708.cloudfunctions.net/ocr?lang=vie&format=googleai", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -114,7 +114,7 @@ export default function Page() {
                 }) => {
                     return {
                         name: expense.item,
-                        price: Number.parseFloat((expense.price ?? "0").replace(/,/g, "")),
+                        price: Number.parseFloat((`${expense.price ?? 0}`).replace(/,/g, "")),
                         date: new Date()
                     }
                 })

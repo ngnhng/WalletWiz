@@ -43,8 +43,8 @@ export default function Page() {
 
             dispatch({
                 type: ACTIONS.REQUEST_UPDATE,
-                payload: ""
-            })
+                payload: "",
+            });
             router.navigate("/home");
         } catch (error) {
             console.error(error);
@@ -52,77 +52,43 @@ export default function Page() {
         } finally {
             setIsLoading(false);
         }
-    }
-
+    };
 
     return (
         <SafeAreaView
             style={{
                 flexGrow: 1,
                 backgroundColor: theme.background,
+                padding: 20,
+                gap: 20,
             }}
         >
+            <StatusBar backgroundColor={theme.background} style="light" />
+            <View style={{ alignSelf: "flex-start" }}>
+                <Pressable
+                    style={{
+                        borderRadius: 15,
+                    }}
+                    android_ripple={{
+                        color: "rgba(255 255 255 / .5)",
+                        borderless: true,
+                    }}
+                    onPress={() => router.back()}
+                >
+                    <Icon3 name="arrow-back" size={24} color={theme.primary} />
+                </Pressable>
+            </View>
+            <Title name={"Spending Log"} />
             <ScrollView
                 style={{
                     flex: 1,
-                    padding: 20,
                 }}
                 contentContainerStyle={{
                     justifyContent: "flex-start",
                     alignItems: "center",
-                    gap: 20,
                     flexGrow: 1,
                 }}
             >
-                <StatusBar backgroundColor={theme.background} style="light" />
-                <View style={{ alignSelf: "flex-start" }}>
-                    <Pressable
-                        style={{
-                            borderRadius: 15,
-                        }}
-                        android_ripple={{
-                            color: "rgba(255 255 255 / .5)",
-                            borderless: true,
-                        }}
-                        onPress={() => router.back()}
-                    >
-                        <Icon3 name="arrow-back" size={24} color={theme.primary} />
-                    </Pressable>
-                </View>
-                <Title name={"Spending Log"} />
-                {/* <View
-                    style={{
-                        width: "100%",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: 10,
-                    }}
-                >
-                    <Pressable
-                        style={{
-                            borderRadius: 15,
-                        }}
-                        android_ripple={{
-                            color: "rgba(255 255 255 / .5)",
-                            borderless: true,
-                        }}
-                    >
-                        <Icon name="chevron-back" size={30} color="#fff" />
-                    </Pressable>
-                    <Text style={{ color: "white" }}>Select Range</Text>
-                    <Pressable
-                        style={{
-                            borderRadius: 15,
-                        }}
-                        android_ripple={{
-                            color: "rgba(255 255 255 / .5)",
-                            borderless: true,
-                        }}
-                    >
-                        <Icon name="chevron-forward" size={30} color="#fff" />
-                    </Pressable>
-                </View> */}
                 <View style={{ gap: 10 }}>
                     {expenses || !isLoading ? (
                         expenses?.map((expense) => (
@@ -158,22 +124,22 @@ export default function Page() {
                         <ActivityIndicator color={theme.primary} animating={true} size="large" />
                     )}
                 </View>
-                <FAB
-                    icon="pencil-plus"
-                    style={{
-                        position: "absolute",
-                        bottom: 0,
-                        right: 0,
-                        borderRadius: 10,
-                        overflow: "hidden",
-                    }}
-                    label="Add Spending"
-                    variant="secondary"
-                    onPress={() => {
-                        router.navigate("/new");
-                    }}
-                />
             </ScrollView>
+            <FAB
+                icon="pencil-plus"
+                style={{
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                    borderRadius: 10,
+                    overflow: "hidden",
+                }}
+                label="Add Spending"
+                variant="secondary"
+                onPress={() => {
+                    router.navigate("/new");
+                }}
+            />
         </SafeAreaView>
     );
 }
